@@ -7,7 +7,7 @@ var margin = {
   top: 20,
   right: 40,
   bottom: 80,
-  left: 100
+  left: 50
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -134,9 +134,18 @@ d3.csv("../data.csv").then(function(data, err) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.healthcare))
-    .attr("r", 20)
-    .attr("fill", "pink")
-    .attr("opacity", ".5");
+    .attr("r", 15)
+    .classed("stateCircle", true);
+    
+  // append abbreviations to circles
+  var abbrGroup = chartGroup.selectAll(null)
+    .data(data)
+    .enter()
+    .append("text")
+    .text(d => d.abbr)
+    .attr("x", d => xLinearScale(d[chosenXAxis]))
+    .attr("y", d => yLinearScale(d.healthcare))
+    .classed("stateText", true);
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
@@ -162,7 +171,7 @@ d3.csv("../data.csv").then(function(data, err) {
     .attr("y", 0 - margin.left)
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
-    .classed("axis-text", true)
+    .classed("active", true)
     .text("Healthcare (%)");
 
   // updateToolTip function above csv import
