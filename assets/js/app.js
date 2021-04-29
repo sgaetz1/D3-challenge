@@ -64,15 +64,20 @@ function renderAxes(newXScale, xAxis) {
 
 // function used for updating circles group with a transition to
 // new circles
-function renderCircles(circlesGroup, newXScale, chosenXAxis, abbrGroup) {
+function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 
   circlesGroup.transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]));
+  return circlesGroup;  
+}
 
-
-  return circlesGroup;
-    
+function updateAbbr(abbrGroup, newXScale, chosenXAxis) {
+  abbrGroup.transition()
+    .duration(1000)
+    .attr("x", d => newXScale(d[chosenXAxis]));
+  console.log("updateAbbr called");
+  return abbrGroup;
 }
 
 
@@ -223,8 +228,8 @@ d3.csv("../data.csv").then(function(data, err) {
         xAxis = renderAxes(xLinearScale, xAxis);
 
         // updates circles with new x values
-        circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, abbrGroup);
-
+        circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
+        abbrGroup = updateAbbr(abbrGroup, xLinearScale, chosenXAxis);
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
