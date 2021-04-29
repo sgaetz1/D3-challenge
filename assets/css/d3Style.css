@@ -19,7 +19,7 @@
 }
 
 .inactive:hover {
-  fill: #000;
+  fill: pink;
   cursor: pointer;
 }
 
