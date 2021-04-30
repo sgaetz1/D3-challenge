@@ -7,7 +7,7 @@ var margin = {
   top: 20,
   right: 40,
   bottom: 80,
-  left: 50
+  left: 80
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -27,6 +27,7 @@ var chartGroup = svg.append("g")
 
 // Initial Params
 var chosenXAxis = "poverty";
+var chosenYAxis = "healthcare";
 
 
 
@@ -44,6 +45,19 @@ function xScale(data, chosenXAxis) {
   return xLinearScale;
 
 }
+
+// function used for updating y-scale var upon click on axis label
+function yScale(data, chosenYAxis) { 
+  
+  var yLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d[chosenYAxis])])
+    .range([height, 0]);
+
+  return yLinearScale;
+
+}
+
+
 
 
 
@@ -76,7 +90,6 @@ function updateAbbr(abbrGroup, newXScale, chosenXAxis) {
   abbrGroup.transition()
     .duration(1000)
     .attr("x", d => newXScale(d[chosenXAxis]));
-  console.log("updateAbbr called");
   return abbrGroup;
 }
 
@@ -96,10 +109,10 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   }
 
   var toolTip = d3.tip()
-    .attr("class", "tooltip")
+    .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
+      return (`${d.state}<br>${label} ${d[chosenXAxis]} <br> Healthcare: ${d.healthcare}%`);
     });
 
   circlesGroup.call(toolTip);
@@ -126,15 +139,15 @@ d3.csv("../data.csv").then(function(data, err) {
   data.forEach(function(data) {
     data.poverty = +data.poverty;
     data.healthcare = +data.healthcare;
+    data.age = +data.age;
+    data.smokes = +data.smokes;
   });
 
   // xLinearScale function above csv import
   var xLinearScale = xScale(data, chosenXAxis);
 
   // Create y scale function
-  var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.healthcare)])
-    .range([height, 0]);
+  var yLinearScale = yScale(data, chosenYAxis); 
 
   // Create initial axis functions
   var bottomAxis = d3.axisBottom(xLinearScale);
@@ -156,7 +169,7 @@ d3.csv("../data.csv").then(function(data, err) {
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
-    .attr("cy", d => yLinearScale(d.healthcare))
+    .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 15)
     .classed("stateCircle", true);
     
@@ -167,7 +180,7 @@ d3.csv("../data.csv").then(function(data, err) {
     .append("text")
     .text(d => d.abbr)
     .attr("x", d => xLinearScale(d[chosenXAxis]))
-    .attr("y", d => yLinearScale(d.healthcare))
+    .attr("y", d => yLinearScale(d[chosenYAxis]))
     .classed("stateText", true);
 
   // Create group for two x-axis labels
@@ -189,13 +202,18 @@ d3.csv("../data.csv").then(function(data, err) {
     .text("Age (Median)");
 
   // append y axis
-  chartGroup.append("text")
-    .attr("transform", "rotate(-90)")
+  var labelsGroupY = chartGroup.append("g")
+    .attr("transform", "rotate(-90)");
+
+  var healthLabel = labelsGroupY.append("text")
     .attr("y", 0 - margin.left)
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .classed("active", true)
     .text("Healthcare (%)");
+
+  var smokesLabel = labelsGroupY.append("text")
+    .
 
 
 
