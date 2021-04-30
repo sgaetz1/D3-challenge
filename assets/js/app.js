@@ -213,7 +213,11 @@ d3.csv("../data.csv").then(function(data, err) {
     .text("Healthcare (%)");
 
   var smokesLabel = labelsGroupY.append("text")
-    .
+    .attr("y", 20- margin.left)
+    .attr("x", 0 - (height/2))
+    .attr("dy", "1em")
+    .classed("inactive", true)
+    .text("Smokes (%)");
 
 
 
