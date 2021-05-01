@@ -70,7 +70,7 @@ function renderAxes(newXScale, xAxis) {
     .duration(1000) 
     .call(bottomAxis);  
 
-  return xAxis;
+  return xAxis; 
 }
 
 function renderYAxes(newYScale, yAxis) {
@@ -82,7 +82,7 @@ function renderYAxes(newYScale, yAxis) {
 
   return yAxis;
 }
-
+ 
 
 
 
@@ -96,10 +96,26 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
   return circlesGroup;  
 }
 
+function renderYCircles(circlesGroup, newYScale, chosenYAxis) {
+
+  circlesGroup.transition()
+    .duration(1000)
+    .attr("cy", d => newYScale(d[chosenYAxis]));
+  return circlesGroup; 
+
+}
+
 function updateAbbr(abbrGroup, newXScale, chosenXAxis) {
   abbrGroup.transition()
     .duration(1000)
     .attr("x", d => newXScale(d[chosenXAxis]));
+  return abbrGroup;
+}
+
+function updateYAbbr(abbrGroup, newYScale, chosenYAxis) {
+  abbrGroup.transition()
+    .duration(1000)
+    .attr("y", d => newYScale(d[chosenYAxis]));
   return abbrGroup;
 }
 
@@ -310,15 +326,16 @@ d3.csv("../data.csv").then(function(data, err) {
         console.log(chosenYAxis);
 
         // functions here found above csv import
-        // updates x scale for new data
+        // updates y scale for new data
         yLinearScale = yScale(data, chosenYAxis);
 
         // updates x axis with transition
-        yAxis = renderYAxes(yLinearScale, yAxis);
+        yAxis = renderYAxes(yLinearScale, yAxis);  
 
-        // updates circles with new x values
-        circlesGroup = renderCircles(circlesGroup, yLinearScale, chosenYAxis);
-        abbrGroup = updateAbbr(abbrGroup, yLinearScale, chosenYAxis);
+        // updates circles with new y values
+        circlesGroup = renderYCircles(circlesGroup, yLinearScale, chosenYAxis);
+
+        abbrGroup = updateYAbbr(abbrGroup, yLinearScale, chosenYAxis);
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
