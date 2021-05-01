@@ -126,21 +126,27 @@ function updateYAbbr(abbrGroup, newYScale, chosenYAxis) {
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
   var label;
+  var unit;
 
   if (chosenXAxis === "poverty") {
     label = "In poverty: ";
+    unit = "%"
   }
   else {
     label = "Age: ";
+    unit = "yrs."
   }
 
   var yLabel;
+  var yUnit;
 
   if (chosenYAxis === "healthcare") {
-    label = "Healthcare: ";
+    ylabel = "Healthcare: ";
+    yUnit = "%"
   }
   else {
-    label = "Smokes: ";
+    ylabel = "Smokes: ";
+    yUnit = "%";
   }
 
 
@@ -148,7 +154,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
     .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.state}<br>${label} ${d[chosenXAxis]} <br> ${yLabel} ${d[chosenYAxis]}%`);
+      return (`${d.state}<br>${label} ${d[chosenXAxis]} ${unit} <br> ${ylabel} ${d[chosenYAxis]} ${yUnit}`);
     });
 
   circlesGroup.call(toolTip);
@@ -247,7 +253,7 @@ d3.csv("../data.csv").then(function(data, err) {
     .attr("dy", "1em")
     .attr("value", "healthcare")
     .classed("active", true)
-    .text("Healthcare (%)"); 
+    .text("Lacks Healthcare (%)"); 
 
   var smokesLabel = labelsGroupY.append("text")
     .attr("y", 20- margin.left)
