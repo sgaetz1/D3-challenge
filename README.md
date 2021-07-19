@@ -4,3 +4,6 @@ This is the repository for my D3 homework. This assignment uses data from the US
 1. Clone this repository to your computer.
 1. Open VS Code and navigate to the root directory  of the repo.
 1. Right click on ```index.html``` and click on *Open with live server.*
+
+![image](https://user-images.githubusercontent.com/14172820/126095271-8ffd7eea-c82e-4932-b9de-ed5b62c63874.png)
+
